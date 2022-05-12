@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { PropertyFilterState } from 'redux/types'
 
-const initialState: PropertyFilterState = {
+export const initialState: PropertyFilterState = {
   address: '',
   bedsMin: null,
   bedsMax: null,

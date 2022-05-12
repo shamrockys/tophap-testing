@@ -7,14 +7,9 @@ import { Container, Box, Paper, Grid, Table, TableBody, TableRow, TableCell } fr
 import { wrapper } from 'redux/store'
 import { useAppSelector } from 'redux/hooks'
 import { setPropertyItem } from 'redux/slice/propertyItemSlice'
-import { PropertyItemState } from 'redux/types'
 import sampleData from 'utils/sampleData'
 
-type PageProp = {
-  data: PropertyItemState
-}
-
-const PropertyDetailPage: NextPage<PageProp> = () => {
+const PropertyDetailPage: NextPage = () => {
 
   const router = useRouter()
   const propertyId = (router.query && router.query.id)?.toString() || ''

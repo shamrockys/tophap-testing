@@ -1,7 +1,7 @@
 import type { NextApiHandler } from 'next'
 import sampleData from 'utils/sampleData'
 
-const countHandler: NextApiHandler = async (request, response) => {
+const propertyDetailHandler: NextApiHandler = async (request, response) => {
   const { id } = request.query
 
   await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -11,4 +11,4 @@ const countHandler: NextApiHandler = async (request, response) => {
   response.json(property)
 }
 
-export default countHandler
+export default propertyDetailHandler

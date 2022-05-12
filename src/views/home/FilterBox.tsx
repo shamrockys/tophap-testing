@@ -1,8 +1,12 @@
 import React from 'react'
 import { Box, TextField, Stack, Button } from '@mui/material'
 import { MdSearch } from 'react-icons/md'
+import { debounce } from 'lodash'
 import { useAppSelector, useAppDispatch } from 'redux/hooks'
-import { actions } from 'redux/slice/propertyFilterSlice'
+import { PropertyFilterState } from 'redux/types'
+import { initialState } from 'redux/slice/propertyFilterSlice'
+import { actions as filterActions } from 'redux/slice/propertyFilterSlice'
+import { actions as listActions } from 'redux/slice/propertyListSlice'
 import AdornmentWrap from './AdornmentWrap'
 
 const FilterBox: React.FC = () => {
@@ -10,62 +14,54 @@ const FilterBox: React.FC = () => {
   const dispatch = useAppDispatch()
   const propertyFilterState = useAppSelector(state => state.propertyFilter)
 
-  const [address, setAddress] = React.useState<string>('')
-  const [bedsMin, setBedsMin] = React.useState<number | null>(null)
-  const [bedsMax, setBedsmax] = React.useState<number | null>(null)
-  const [bathsMin, setBathsMin] = React.useState<number | null>(null)
-  const [bathsMax, setbathsMax] = React.useState<number | null>(null)
+  const [filter, setFilter] = React.useState<PropertyFilterState>(initialState)
 
   React.useEffect(() => {
-    setAddress(propertyFilterState.address)
-    setBedsMin(propertyFilterState.bedsMin)
-    setBedsmax(propertyFilterState.bedsMax)
-    setBathsMin(propertyFilterState.bathsMin)
-    setbathsMax(propertyFilterState.bathsMax)
+    setFilter(propertyFilterState)
   }, [])
 
   const handleReset = () => {
-    setAddress('')
-    setBedsMin(null)
-    setBedsmax(null)
-    setBathsMin(null)
-    setbathsMax(null)
-    dispatch(actions.reset())
+    setFilter(initialState)
+    dispatch(filterActions.reset())
   }
 
+  const handleFilterChange = (key: string, value: string | number) => {
+    const newFilter = { ...filter, [key]: value }
+    setFilter(newFilter)
+    dispatch(filterActions.update(newFilter))
+    handleFilterApplyDebounce(newFilter)
+  }
+
+  const handleFilterApply = (filter: PropertyFilterState) => {
+    let searchParams = new URLSearchParams()
+    searchParams.set('address', filter.address)
+    searchParams.set('bedsMin', filter.bedsMin ? filter.bedsMin.toString() : '')
+    searchParams.set('bedsMax', filter.bedsMax ? filter.bedsMax.toString() : '')
+    searchParams.set('bathsMin', filter.bathsMin ? filter.bathsMin.toString() : '')
+    searchParams.set('bathsMax', filter.bathsMax ? filter.bathsMax.toString() : '')
+    dispatch(listActions.filterPropertyList(searchParams.toString()))
+  }
+
+  const handleFilterApplyDebounce = React.useCallback(debounce(handleFilterApply, 300), [])
+
   const handleChangeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value)
-    dispatch(actions.update({
-      address: e.target.value
-    }))
+    handleFilterChange('address', e.target.value)
   }
 
   const handleChangeBedsMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBedsMin(parseInt(e.target.value))
-    dispatch(actions.update({
-      bedsMin: e.target.value
-    }))
+    handleFilterChange('bedsMin', parseInt(e.target.value))
   }
 
   const handleChangeBedsdMax = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBedsmax(parseInt(e.target.value))
-    dispatch(actions.update({
-      bedsMax: e.target.value
-    }))
+    handleFilterChange('bedsMax', parseInt(e.target.value))
   }
 
   const handleChangeBathsMin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBathsMin(parseInt(e.target.value))
-    dispatch(actions.update({
-      bathsMin: e.target.value
-    }))
+    handleFilterChange('bathsMin', parseInt(e.target.value))
   }
 
   const handleChangeBathsMax = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setbathsMax(parseInt(e.target.value))
-    dispatch(actions.update({
-      bathsMax: e.target.value
-    }))
+    handleFilterChange('bathsMax', parseInt(e.target.value))
   }
 
   return (
@@ -74,33 +70,33 @@ const FilterBox: React.FC = () => {
       <TextField
         placeholder="address"
         InputProps={{ startAdornment: <AdornmentWrap><MdSearch /></AdornmentWrap>, }}
-        value={address || ''}
+        value={filter.address || ''}
         onChange={handleChangeAddress}
       />
       <Box>Beds</Box>
       <TextField
         size="small"
         InputProps={{ startAdornment: <AdornmentWrap>MIN</AdornmentWrap> }}
-        value={bedsMin || ''}
+        value={filter.bedsMin || ''}
         onChange={handleChangeBedsMin}
       />
       <TextField
         size="small"
         InputProps={{ startAdornment: <AdornmentWrap>MAX</AdornmentWrap> }}
-        value={bedsMax || ''}
+        value={filter.bedsMax || ''}
         onChange={handleChangeBedsdMax}
       />
       <Box>Baths</Box>
       <TextField
         size="small"
         InputProps={{ startAdornment: <AdornmentWrap>MIN</AdornmentWrap> }}
-        value={bathsMin || ''}
+        value={filter.bathsMin || ''}
         onChange={handleChangeBathsMin}
       />
       <TextField
         size="small"
         InputProps={{ startAdornment: <AdornmentWrap>MAX</AdornmentWrap> }}
-        value={bathsMax || ''}
+        value={filter.bathsMax || ''}
         onChange={handleChangeBathsMax}
       />
       <Button size="small" variant="outlined" color="inherit" onClick={handleReset}>

@@ -4,7 +4,6 @@ import Head from 'next/head'
 import { Box, Container, Grid, LinearProgress, IconButton } from '@mui/material'
 import { actions } from 'redux/slice/propertyListSlice'
 import { useAppSelector, useAppDispatch } from 'redux/hooks'
-import { Property } from 'redux/types'
 import PropertyCard from 'views/home/PropertyCard'
 import FilterBox from 'views/home/FilterBox'
 import { MdFilterList } from 'react-icons/md'
@@ -13,30 +12,11 @@ const Home: NextPage = () => {
 
   const dispatch = useAppDispatch()
   const propertyListState = useAppSelector(state => state.propertyList)
-  const propertyFilterState = useAppSelector(state => state.propertyFilter)
   const [filter, setFilter] = React.useState(false)
-  const [propertyList, setPropertyList] = React.useState<Property[]>([])
 
   React.useEffect(() => {
     dispatch(actions.getPropertyList())
   }, [])
-
-  React.useEffect(() => {
-    if (propertyListState.initialized) {
-      setPropertyList(propertyListState.list.filter(d => {
-        const address = (propertyFilterState.address || '').toLowerCase()
-        const bedsMin = propertyFilterState.bedsMin || 0
-        const bedsMax = propertyFilterState.bedsMax || Number.POSITIVE_INFINITY
-        const bathsMin = propertyFilterState.bathsMin || 0
-        const bathsMax = propertyFilterState.bathsMax || Number.POSITIVE_INFINITY
-        return d.address.fullAddress.toLowerCase().includes(address)
-          && d.beds >= bedsMin
-          && d.beds <= bedsMax
-          && d.baths >= bathsMin
-          && d.baths <= bathsMax
-      }))
-    }
-  }, [propertyListState, propertyFilterState])
 
   const handleToggleFilter = () => {
     setFilter(!filter)
@@ -61,7 +41,7 @@ const Home: NextPage = () => {
           <Box>
             <Box sx={{ display: 'flex' }}>
               <Grid container spacing={4}>
-                {propertyList.map(d => (
+                {propertyListState.list.map(d => (
                   <Grid key={d.id} item xs={12} md={6}>
                     <PropertyCard property={d} />
                   </Grid>
