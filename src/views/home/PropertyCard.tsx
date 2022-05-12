@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { Box, Table, TableBody, TableRow, TableCell, ButtonBase } from '@mui/material'
 import { Property } from 'redux/types'
 
-type PropertyCardProps = {
+type Props = {
   property: Property
 }
 
-const PropertyCard = ({ property }: PropertyCardProps) => {
+const PropertyCard: React.FC<Props> = ({ property }) => {
   return (
     <ButtonBase
       component="div"

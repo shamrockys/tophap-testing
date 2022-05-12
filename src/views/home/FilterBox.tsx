@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from 'redux/hooks'
 import { actions } from 'redux/slice/propertyFilterSlice'
 import AdornmentWrap from './AdornmentWrap'
 
-const FilterBox = () => {
+const FilterBox: React.FC = () => {
 
   const dispatch = useAppDispatch()
   const propertyFilterState = useAppSelector(state => state.propertyFilter)

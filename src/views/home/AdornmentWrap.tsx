@@ -1,7 +1,11 @@
 import React from 'react'
 import { Box, InputAdornment } from '@mui/material'
 
-const AdornmentWrap = ({ children }: any) => (
+type Props = {
+  children: React.ReactNode
+}
+
+const AdornmentWrap: React.FC<Props> = ({ children }) => (
   <InputAdornment position="start">
     <Box sx={{ fontFamily: 'monospace' }}>
       {children}
