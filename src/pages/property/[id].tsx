@@ -20,7 +20,6 @@ const PropertyDetailPage: NextPage<PageProp> = () => {
   const propertyId = (router.query && router.query.id)?.toString() || ''
   const propertyItemState = useAppSelector(state => state.propertyItem)
   const property = propertyItemState[propertyId]
-  console.log(property)
 
   return (
     <Box>
@@ -31,7 +30,7 @@ const PropertyDetailPage: NextPage<PageProp> = () => {
         <Box my={4} component="h1">
           Property Management
         </Box>
-        <Box my={4} sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', height: 80 }}>
           <Link href="/" passHref>
             List
           </Link>

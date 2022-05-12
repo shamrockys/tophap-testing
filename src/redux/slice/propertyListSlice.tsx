@@ -4,7 +4,7 @@ import { PropertyListState } from 'redux/types'
 
 const initialState: PropertyListState = {
   list: [],
-  loading: false,
+  initialized: false,
 }
 
 // thunk
@@ -19,7 +19,7 @@ const getPropertyList = createAsyncThunk(
 
 // slice
 
-export const propertySlice = createSlice({
+export const propertyListSlice = createSlice({
   name: 'propertyList',
   initialState,
   reducers: {},
@@ -27,15 +27,15 @@ export const propertySlice = createSlice({
     builder
       .addCase(getPropertyList.fulfilled, (state, action) => {
         state.list = action.payload
-        state.loading = true
+        state.initialized = true
       })
 
   }
 })
 
 export const actions = {
-  ...propertySlice.actions,
+  ...propertyListSlice.actions,
   getPropertyList,
 }
 
-export default propertySlice
+export default propertyListSlice

@@ -23,11 +23,19 @@ export interface PropertyFull extends Property {
 
 export interface PropertyListState {
   list: Property[]
-  loading: boolean
+  initialized: boolean
 }
 
 export interface PropertyItemState {
   [index: string]: PropertyFull
+}
+
+export interface PropertyFilterState {
+  address: string
+  bedsMin: number | null
+  bedsMax: number | null
+  bathsMin: number | null
+  bathsMax: number | null
 }
 
 // app types
@@ -35,6 +43,7 @@ export interface PropertyItemState {
 export type AppState = {
   propertyList: PropertyListState
   propertyItem: PropertyItemState
+  propertyFilter: PropertyFilterState
 }
 
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action>
