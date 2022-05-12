@@ -15,7 +15,9 @@ const Home: NextPage = () => {
   const [filter, setFilter] = React.useState(false)
 
   React.useEffect(() => {
-    dispatch(actions.getPropertyList())
+    if (!propertyListState.initialized) {
+      dispatch(actions.getPropertyList())
+    }
   }, [])
 
   const handleToggleFilter = () => {
