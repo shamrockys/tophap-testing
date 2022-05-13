@@ -23,6 +23,13 @@ const FilterBox: React.FC = () => {
   const handleReset = () => {
     setFilter(initialState)
     dispatch(filterActions.reset())
+    let searchParams = new URLSearchParams()
+    searchParams.set('address', '')
+    searchParams.set('bedsMin', '')
+    searchParams.set('bedsMax', '')
+    searchParams.set('bathsMin', '')
+    searchParams.set('bathsMax', '')
+    dispatch(listActions.filterPropertyList(searchParams.toString()))
   }
 
   const handleFilterChange = (key: string, value: string | number) => {
